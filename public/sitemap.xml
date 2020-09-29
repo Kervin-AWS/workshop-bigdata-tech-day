@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>/</loc>
+  </url>
+  
+  <url>
+    <loc>/002_connect-car-to-iot/021_create_skill/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/002_connect-car-to-iot/022_edit_code/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/010_architecture/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/001_create_cloud9/</loc>
+  </url>
+  
+  <url>
+    <loc>/002_connect-car-to-iot/</loc>
+  </url>
+  
+  <url>
+    <loc>/003_shadow/</loc>
+  </url>
+  
+  <url>
+    <loc>/004_webcontrol/</loc>
+  </url>
+  
+  <url>
+    <loc>/004_webcontrol/041_creates3/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/004_webcontrol/042_connet_rasp/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/004_webcontrol/043_connet_raspberry/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/004_webcontrol/044_test_the_lamp/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/authors/</loc>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

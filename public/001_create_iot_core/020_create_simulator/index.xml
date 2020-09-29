@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>1. 创建智能灯泡模拟器 on IOT Workshop</title>
+    <link>/001_create_iot_core/020_create_simulator/</link>
+    <description>Recent content in 1. 创建智能灯泡模拟器 on IOT Workshop</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Oct 2018 10:17:52 -0700</lastBuildDate>
+    
+	<atom:link href="/001_create_iot_core/020_create_simulator/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>

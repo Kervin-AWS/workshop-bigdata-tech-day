@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>3. 启动Cloud9 on IOT Workshop</title>
+    <link>/002_create_connection_thinganduser/040_setup_cloud9/</link>
+    <description>Recent content in 3. 启动Cloud9 on IOT Workshop</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Oct 2018 10:17:52 -0700</lastBuildDate>
+    
+	<atom:link href="/002_create_connection_thinganduser/040_setup_cloud9/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>

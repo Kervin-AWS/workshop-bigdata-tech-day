@@ -1,0 +1,65 @@
+languageCode = "en-us"
+ignoreFiles = [ "\\.files/README.md$",  "content/intermediate/260_weave_flux/app.files/"]
+defaultContentLanguage = "en"
+title = "IOT Workshop"
+theme = "learn"
+uglyurls = false
+googleAnalytics = "UA-44634850-4"
+sectionPagesMenu = "main"
+relativeURLs = true
+
+[blackfriday]
+hrefTargetBlank = true
+
+[params]
+editURL = "https://github.com/aws-samples/eks-workshop/edit/main/content/"
+themeVariant = "mine"
+showVisitedLinks = false
+author = "Brent Langston"
+description = "IOT Workshop"
+disableSearch = false
+disableAssetsBusting = false
+disableLanguageSwitchingButton = true
+disableShortcutsTitle=false
+disableInlineCopyToClipBoard = true
+ghrepo = "https://github.com/aws-samples/eks-workshop/"
+branch = "main"
+template_bucket = "eksworkshop.com"
+pygmentsUseClasses = true
+pygmentsCodeFences = true
+pygmentsCodefencesGuessSyntax = true
+pygmentsStyle = "tango"
+
+
+
+#
+
+[menu]
+  [[menu.main]]
+    identifier = "Prerequisites"
+    name = "This is the Mu track"
+    title = "Workshop using Mu"
+    url = "/mu/"
+    weight = -110
+
+
+[[menu.shortcuts]]
+[[menu.shortcuts]]
+name = "<i class='fas fa-users'></i> Authors"
+url = "/authors"
+weight = 20
+
+[[menu.shortcuts]]
+name = "<i class='fab fa-github'></i> GitHub Project"
+url = "https://github.com/Kervin-AWS/workshop-auto-iot"
+weight = 30
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-envelope'></i> Have questions?"
+url = "mailto:huyikai@amazon.com"
+weight = 40
+
+
+[outputs]
+home = [ "HTML", "JSON"]
+page = [ "HTML" ]

@@ -1,0 +1,106 @@
+[
+{
+	"uri": "/",
+	"title": "AWS IOT 动手训练营",
+	"tags": [],
+	"description": "",
+	"content": "  AWS IOT 开发者动手训练营\n本部署指南讨论了中国区IOT设备运用的架构注意事项和配置步骤。\n"
+},
+{
+	"uri": "/002_connect-car-to-iot/021_create_skill/",
+	"title": "1. 创建 IOT Core",
+	"tags": [],
+	"description": "",
+	"content": " 在浏览器中，打开 IoT core控制台 ，选择管理物品，并选择创建  选择创建单个物品  取名car-xx(建议为树莓派纸盒上的编号)，本次lab不需要设置或选择type，然后点击下一步  选择一键式创建证书， 点击激活证书，并保存下载证书、公钥和私钥至您的本地笔记本电脑，去掉文件名前面的c838e129ec-\n并点击完成。至此car创建完成, 您将看到下面的内容  添加物品策略\n点击左侧管理、物品，找到您创建的物品，并选中，随后点击安全性中的证书 然后点击左侧的策略，我们可以看到目前没有策略\n点击右上角的操作，选择附加策略，选择demo-iot-policy, 点击附加   "
+},
+{
+	"uri": "/002_connect-car-to-iot/022_edit_code/",
+	"title": "2. 配置虚拟车辆",
+	"tags": [],
+	"description": "",
+	"content": " 在Cloud9界面IDE中选中lab1-2文件夹，点击File，upload local files，将创建IOT物品步骤中生成的certificate.pem.crt和private.pem.key上传。\n您也可以直接用拖拽的方式将文件拖到目标文件夹。  exercise-lab1.js为实验1的代码，代码主要分为两部分，第一部分配置IoT endpoint，证书，private key等信息，并定义auto/（devicename）为消息topic 首先编辑exercise-lab1.js 中24行的 deviceName 以及 endpointAddress（IOT 的endpoint在下图中获得） 例如：\nconst deviceName = 'car-01'; const endpointAddress = 'a1ba8o0iqbelxz.ats.iot.cn-north-1.amazonaws.com.cn'  代码第二部分模拟汽车行驶状态，随机生成一些速度，油量，位置，紧急刹车事件等信息  然后在命令行中，进入lab1-2文件夹，并运行exercise-lab1.js程序，模拟汽车运行\ncd /home/ec2-user/workspace/auto-iot-lab/lab1-2 npm install aws-iot-device-sdk node exercise-lab1.js   在IoT core 中选择Test-Subscribe to a topic，填写代码中定义的topic：auto/(device_name) 如auto/car-01，并订阅 代码中定义每5秒生产一次数据，测试界面中将会持续收到car的行驶信息\nLab1测试成功  在Cloud9 中ctrl + C 终止程序，我们进入下一个实验。   "
+},
+{
+	"uri": "/010_architecture/",
+	"title": "OverView",
+	"tags": [],
+	"description": "",
+	"content": "在这个动手训练营中，您将会学习到如何使用 AWS 的服务来构建一个车辆IOT模拟器。\n本训练营包括三个子实验:\n Lab1 - 将车辆接入AWS IOT Lab2 - AWS IoT 影子控制 Lab3 - 通过Web与AWS IoT交互  "
+},
+{
+	"uri": "/001_create_cloud9/",
+	"title": "创建 Cloud9 Lab环境",
+	"tags": [],
+	"description": "",
+	"content": " 实验将在北京Region（cn-north-1）进行，我们运用创建一个EC2 的Cloud9 实例来统一编程环境。\n  登录EC2控制台, 输入现场工作人员提供的用户名与密码\n本实验的用户名为：demouser-xx, 为了方便大家进行区分，可以以手头树莓派的编号替代前述的xx\n密码为现场工作人员提供的密码\n启动EC2 ，新建实例：  点击Marketplace，搜索Cloud9，点击选择  选择实例类型，此处选择t3a.small:  选择下一步，配置实例详细信息，然后连续点击两次下一步。来到步骤5: 添加标签，添加标签 Name: 你的名字，用户和其他用户区分开。  选择下一步，来到步骤6: 配置安全组，选择 选择一个现有的安全组，然后选择ID为sg-024db36b892d8b71e的安全组。  点击审核和启动，在弹出的密钥对选择界面，选择在没有密钥对的情况下继续，然后勾选我确认，然后启动实例。  然后点击启动实例，成功后，由于是共用账号，所以有现场会看到较多其他用户生成的实例，请在上方搜索栏根据Name找到您启动的实例(请不要和现场的其他用户弄混)  选中您创建的实例，我们为其赋予实验相关的IAM权限\n点击上方的操作，然后选择实例设置，Attach/Replace IAM Role\n选择ec2-s3-iot-access，并点击Apply\n 登录基于EC2搭建的Cloud9 编程环境\n在浏览器中输入 公有IP:8181 （请关闭所有代理）\n输入用户名： aws，\n密码： 实例ID（如下图所示），进入Cloud9界面.\n 从github 下载代码 在terminal中输入：\ngit clone https://github.com/Kervin-AWS/auto-iot-lab.git    "
+},
+{
+	"uri": "/002_connect-car-to-iot/",
+	"title": "Lab1 将汽车接入AWS IoT",
+	"tags": [],
+	"description": "",
+	"content": " 部署说明 Lab1将会在cloud9中模拟一台行驶的汽车设备，将行驶中的一些状态信息上传到AWS IoT,如下图所示\n我们将分别从以下步骤进行实验：\n 1. 创建 IOT Core   2. 配置虚拟车辆   "
+},
+{
+	"uri": "/003_shadow/",
+	"title": "Lab2 AWS IoT的设备影子",
+	"tags": [],
+	"description": "",
+	"content": "利用IoT shadow，可以在云端创建一个真实设备的影子，用于在设备断网时记录状态信息，联网后影子将和设备进行状态同步\n 我们在IoT core中找到car-xx，查看shadow状态\n 打开Lab2的代码exercise-lab2.js，可以看到代码定义了车灯开和车灯关两个状态 修改exercise-lab2.js 的21行的物品名称， 在当前目录执行代码，可以看到当前状态为车灯关闭 在云端查看car1点影子状态，可以看到已经实时同步为lights:false，即车灯关闭 我们在云端对car1的影子发布指令，把车灯打开。 在IoT core中选择Test-Publish to a topic，输入$aws/things/car-xx/shadow/update，将xx替换为你的编号，在方框中写入执行代码，\n{ \u0026quot;state\u0026quot;: { \u0026quot;desired\u0026quot;: { \u0026quot;lights\u0026quot;: true } } }  然后Publish  在Cloud9客户端可以看到car1 reporting了一个新的状态，车灯状态从off 变成了on，云端指令下发成功 在云端查看之前订阅的$aws/things/car1/shadow/update/documents，可以看到影子状态从false变成true\n 在云端多次改变shadow状态，在cloud9设备端查看car1车灯状态   "
+},
+{
+	"uri": "/004_webcontrol/",
+	"title": "Lab3 通过web与AWS IoT交互",
+	"tags": [],
+	"description": "",
+	"content": " 实验说明 除了MQTT外，另外一个非常典型的场景是使用https，通过web和AWS IoT交互。\nLab3将通过aws cognito验证身份，并通过web对shadow进行操作\n为了简化实验，本Lab已经配置好了统一的Congnito 身份池\n我们将分别从以下步骤进行配置：\n 1. 部署静态前端网页   2. 部署到树莓派   3. 连接灯泡并测试   4. 测试 IOT 车灯控制模拟器   "
+},
+{
+	"uri": "/004_webcontrol/041_creates3/",
+	"title": "1. 部署静态前端网页",
+	"tags": [],
+	"description": "",
+	"content": " 创建S3存储桶，起名为auto-iot-lab-xx（如auto-iot-lab-01）, 用于托管与IoT交互的静态网站，需要开放Public访问权限。  然后返回Cloud9 中，进入Lab3文件夹\n您只需要更改Cloud9 中 Lab3 文件夹下 index.js 中的 26行的 deviceName 为您的IOT设备名称，如 car-01\n 将文件同步到目标储存桶中，在terminal中输入：\naws configure set default.region cn-north-1 cd /home/ec2-user/workspace/auto-iot-lab/lab3 aws s3 cp --recursive --acl public-read . s3://auto-iot-lab-01（请换成您创建的储存桶名称）   点击属性，选择静态网站托管 选择使用此储存桶托管网站，并填写索引文档为index.html  点击S3存储桶中的index.html,复制右边的对象URL  进入Cloud9， 启动Lab2的脚本，查看当前shadow状态，车灯状态是on。\nnode ./exercise-lab2.js   打开前述index.html的网址，进入如下页面，点击Toggle car1’s lights，可以对车灯进行开和关  进入Cloud9环境，查看car1设备车灯情况，发现和web操作一致。也可以在云端查看shadow和delta信息进一步核对   "
+},
+{
+	"uri": "/004_webcontrol/042_connet_rasp/",
+	"title": "2. 部署到树莓派",
+	"tags": [],
+	"description": "",
+	"content": " 将代码拉取到树莓派中  通过ssh进入树莓派， Mac用户可以直接通过terminal进入， Windows用户请确认系统以开启ssh功能后，再运用相关软件进行连接\n用户名： pi\n密码： awsworkshop\nssh pi@192.xxx.xxx.xx  首先拉取github树莓派端的代码\ngit clone https://github.com/Kervin-AWS/auto-iot-lab-rasp.git  在本地terminal通过cd命令内进入“创建智能灯泡模拟器”步骤中下载的证书文件夹，将生成的 certificate.pem.crt、private.pem.key 通过scp的方式传入树莓派的auto-iot-lab-rasp/src文件夹中\nscp ./certificate.pem.crt pi@xxx.xxx.xxx.xxx:/home/pi/auto-iot-lab-rasp/src scp ./private.pem.key pi@xxx.xxx.xxx.xxx:/home/pi/auto-iot-lab-rasp/src  在树莓派内通过 vim 或者 nano 修改exercise-lab3.js中的thingName为自己设置的IOT 设备名称，如car-01\n 然后在树莓派中启动exercise-lab3.js\nnode exercise-lab3.js   "
+},
+{
+	"uri": "/004_webcontrol/043_connet_raspberry/",
+	"title": "3. 连接灯泡并测试",
+	"tags": [],
+	"description": "",
+	"content": "按下图将灯泡通过母母的杜邦线连接到树莓派上： 灯泡的R极 -\u0026gt; 树莓派18引脚\n灯泡的负极-\u0026gt; 树莓派GND引脚\n"
+},
+{
+	"uri": "/004_webcontrol/044_test_the_lamp/",
+	"title": "4. 测试 IOT 车灯控制模拟器",
+	"tags": [],
+	"description": "",
+	"content": "现在，您可以通过网页端配置来进行模拟车灯开关控制的测试了。\n 打开您在步骤1中创建的前端静态车辆控制页面\n 点击按钮观察树莓派灯泡的状态变化\n  \n"
+},
+{
+	"uri": "/categories/",
+	"title": "Categories",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "/authors/",
+	"title": "Credits",
+	"tags": [],
+	"description": "",
+	"content": " Thanks to our wonderful contributors  for making Open Source a better place! Please go to Contributors page to checkout authors for this Workshop\n"
+},
+{
+	"uri": "/tags/",
+	"title": "Tags",
+	"tags": [],
+	"description": "",
+	"content": ""
+}]

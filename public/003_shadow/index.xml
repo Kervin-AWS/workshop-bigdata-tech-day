@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Lab2 AWS IoT的设备影子 on IOT Workshop</title>
+    <link>/003_shadow/</link>
+    <description>Recent content in Lab2 AWS IoT的设备影子 on IOT Workshop</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="/003_shadow/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>
