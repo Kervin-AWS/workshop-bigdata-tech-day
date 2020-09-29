@@ -12,13 +12,7 @@ Install Hugo:
 
 #### Clone this repo:
 From wherever you checkout repos:
-`git clone https://github.com/Kervin-AWS/workshop-auto-iot.git` (or your fork)
-
-#### Clone the theme submodule:
-`cd workshop-auto-iot`
-
-`git submodule init` ;
-`git submodule update`
+`git clone https://github.com/Kervin-AWS/workshop-bigdata-tech-day.git` (or your fork)
 
 #### Install Node.js and npm:
 You can follow instructions from npm website: https://www.npmjs.com/get-npm

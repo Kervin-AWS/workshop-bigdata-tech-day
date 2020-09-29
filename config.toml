@@ -51,7 +51,7 @@ weight = 20
 
 [[menu.shortcuts]]
 name = "<i class='fab fa-github'></i> GitHub Project"
-url = "https://github.com/Kervin-AWS/workshop-auto-iot"
+url = "https://github.com/Kervin-AWS/workshop-bigdata-tech-day"
 weight = 30
 
 [[menu.shortcuts]]

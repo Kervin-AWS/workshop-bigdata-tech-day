@@ -9,4 +9,4 @@ disableToc: true
 note: change the url to match the new repo... using old repo as an example placeholder
 --->
 
-Please go to [Contributors page](https://github.com/Kervin-AWS/workshop-auto-iot/graphs/contributors) to checkout authors for this Workshop
+Please go to [Contributors page](https://github.com/Kervin-AWS/workshop-bigdata-tech-day/graphs/contributors) to checkout authors for this Workshop
