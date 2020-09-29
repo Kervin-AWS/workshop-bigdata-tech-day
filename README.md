@@ -1,4 +1,4 @@
-# 数据赋能 智能互联 Workshop
+# BigData Workshop
 
 ### Setup:
 
