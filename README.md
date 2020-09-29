@@ -34,8 +34,8 @@ Visit http://localhost:8080/ to see the site.
 
 #### Making Edits:
 As you save edits to a page, the site will live-reload to show your changes.
-1. Rename Folder and edit each _index.md file
-2. Images should be put in /static/images Folder
+1. Rename Folder and edit each _index.md file ![Image](/edit_content.png)
+2. Images should be put in /static/images Folder ![Image](/edit_image.png)
 
 #### Auto Deploy:
 Any commits to main will auto build and deploy in a couple of minutes. You can see the currently
