@@ -14,11 +14,81 @@
 	"content": " 在浏览器中，打开 IoT core控制台 ，选择管理物品，并选择创建  选择创建单个物品  取名car-xx(建议为树莓派纸盒上的编号)，本次lab不需要设置或选择type，然后点击下一步  选择一键式创建证书， 点击激活证书，并保存下载证书、公钥和私钥至您的本地笔记本电脑，去掉文件名前面的c838e129ec-\n并点击完成。至此car创建完成, 您将看到下面的内容  添加物品策略\n点击左侧管理、物品，找到您创建的物品，并选中，随后点击安全性中的证书 然后点击左侧的策略，我们可以看到目前没有策略\n点击右上角的操作，选择附加策略，选择demo-iot-policy, 点击附加   "
 },
 {
+	"uri": "/003_emr/031_object/",
+	"title": "1. 实验目标",
+	"tags": [],
+	"description": "",
+	"content": "在本练习中，您将学习如何使用 Amazon EMR（Spark）和 AWS Glue （ETL）构建批量数据分析处理程序。\n为了使本实验的练习更加贴近实际的业务场景，我们模拟了完整的从数据 产生（模拟历史数据和流数据）、数据存储、数据处理、到数据分析和数据可 视化的完整过程（数据可视化在 Lab3/Lab4 中完成）。具体可参考如下架构图：组件说明如下： - RDS 作为 Lab2 次实验的历史数据源，RMDBS 格式，包含人员信息表 tbl_customer、产品信息表 tbl_product、地址信息表 tbl_address、交易历史流水表 tbl_transaction，等 4 张表，参与批处理计算 - Lab1 实验中 Kinesis 的输出（存放在 Lab1 指定的 S3 文件夹中，Json 格 式），为近实时当日交易流水，也可以作为 Lab2 批处理的输入，参与批处理计算（注意：学员可以考虑使用 Lab1 的输出数据或者使用我们提前准备好的数据）； - S3 桶作为数据湖的存储基础，包含 input 文件夹（用于 EMR Spark 批处理的输入），存放通过 Glue ETL 加载进来的 RDS 历史数据源和 Kinesis 当日近实时数据，以 Parquet 格式存放。output 文件夹，存放 EMR Spark 批处理的结果数据（Parquet 格式）；\n详细的数据链路图和说明如下：具体说明如下：\n1.1 通过 Glue Crawler 功能爬取 RDS 库中 4 张表的元数据和 Kinesis 输出的数 据的元数据；\n1.2 Glue Crawler 将爬取 RDS 和 Kinesis 的元数据，存入到 Glue 的 Data Catalog 数据库；\n1.3 Glue ETL 通过 Data Catalog 识别 RDS 表元数据和 Kinesis 元数据，以便 ETL 作业引用；\n1.4 Glue ETL 加载 4 张表数据和 Kinesis 输出的数据，到指定的 S3 存储桶的 input 文件夹中，作为 Spark 批处理的数据源输入；\n1.5 通过 Glue Crawler 功能爬取 S3 桶中 input 文件夹中数据的元数据；\n1.6 Glue Crawler 将爬取 input 文件夹中数据的元数据，存入 Glue 的 Data Catalog 数据库；\n1.7 EMR Spark 环境通过 Data Catalog 获取 input 文件夹的元数据，进而开展 批处理作业；\n1.8 将 EMR Spark 批处理作业的结果输出至指定的 S3 存储桶的 output 文件 夹中；\n1.9 通过 Glue Crawler 功能爬取 S3 桶中 output 文件夹中数据的元数据；\n2.0 Glue Crawler 将爬取 output 文件夹中数据的元数据，存入 Glue 的 Data Catalog 数据库；\n2.1 利用 Athena 服务，查询 input、output 数据；\n"
+},
+{
+	"uri": "/003_emr/032_prepare/",
+	"title": "2. 环境准备",
+	"tags": [],
+	"description": "",
+	"content": "环境准备工作主要包括： - 本实验将在新加坡（ap-southeast-1）区域进行； - 本实验需要准备 rds 数据库； - 对应的 EMR 处理对接的 S3 桶信息如下： - 文件夹： /glue/code, 存放 Glue ETL 脚本； - 文件夹： /spark/code, 存放 Spark 批处理 Java 代码 jar 包； - 文件夹： /spark/input/tbl_address, 存放客户地址数据； - 文件夹： /spark/input/tbl_customer, 存放客户信息数据； - 文件夹： /spark/input/tbl_product, 存放产品信息数据； - 文件夹： /spark/input/tbl_transaction, 存放历史交易流水和当天 近实时流水数据； - 文件夹： /spark/output, 存放 Spark 批处理结果数据；\n"
+},
+{
 	"uri": "/002_connect-car-to-iot/022_edit_code/",
 	"title": "2. 配置虚拟车辆",
 	"tags": [],
 	"description": "",
 	"content": " 在Cloud9界面IDE中选中lab1-2文件夹，点击File，upload local files，将创建IOT物品步骤中生成的certificate.pem.crt和private.pem.key上传。\n您也可以直接用拖拽的方式将文件拖到目标文件夹。  exercise-lab1.js为实验1的代码，代码主要分为两部分，第一部分配置IoT endpoint，证书，private key等信息，并定义auto/（devicename）为消息topic 首先编辑exercise-lab1.js 中24行的 deviceName 以及 endpointAddress（IOT 的endpoint在下图中获得） 例如：\nconst deviceName = 'car-01'; const endpointAddress = 'a1ba8o0iqbelxz.ats.iot.cn-north-1.amazonaws.com.cn'  代码第二部分模拟汽车行驶状态，随机生成一些速度，油量，位置，紧急刹车事件等信息  然后在命令行中，进入lab1-2文件夹，并运行exercise-lab1.js程序，模拟汽车运行\ncd /home/ec2-user/workspace/auto-iot-lab/lab1-2 npm install aws-iot-device-sdk node exercise-lab1.js   在IoT core 中选择Test-Subscribe to a topic，填写代码中定义的topic：auto/(device_name) 如auto/car-01，并订阅 代码中定义每5秒生产一次数据，测试界面中将会持续收到car的行驶信息\nLab1测试成功  在Cloud9 中ctrl + C 终止程序，我们进入下一个实验。   "
+},
+{
+	"uri": "/003_emr/033_process/",
+	"title": "3. 实验过程",
+	"tags": [],
+	"description": "",
+	"content": " 如果在实验过程中，发现某个步骤文档未截图或者未特别标注，表示选择默认值即可。 因为 S3 桶名字是全球唯一的，建议各位学员创建 S3 桶时带上账号 id 和实 验 id，例如本实验用到的 S3 桶名为：lab2-748313030715-sin-com 查看账号 id 的方式如下（控制台屏幕右上角）： 那个 http 的服务器的用户名是 bdd，密码是 bdd@2020  "
+},
+{
+	"uri": "/003_emr/033_process/0331_create_rds/",
+	"title": "3.1 创建 RDS 数据库连接",
+	"tags": [],
+	"description": "",
+	"content": " 创建IAM Role  登录并打开 IAM 的控制台，选择创建角色: 在实体类型那里往下拉，选择 Glue: 然后选择下一步：把 AdministratorAccess 的权限赋予它（严格意义上来讲，这不符合最小权限原 则，此处为了测试，我们就简单化了）：其他都默认值，在审核保存页面输入对应名字（此处为 lab-role）后保存：  创建S3终端节点  登录并打开 VPC 控制台，往下拉选择左边的终端节点：选中 S3，选择对应 VPC（此处我们只有一个默认 VPC）和路由表： 其他默认，点击“创建终端节点”即可。\n 创建 RDS 数据库  参考：lab0-3-部署 RDS 和 EMR 集群-实验手册-20200825-v0.1.pdf\n 创建 RDS 数据库连接  登录并打开 AWS Glue 控制台（确认在 AWS 的新加坡区域），选择添加数据库 连接：设置连接名称（Lab2-Glue-RDS-connection）和类型选择对应配置（请输入之前部署 rds 时 admin 的密码）：审核并完成，然后开始连接测试，测试时需要使用第一步创建的 role：需要 1-2 分钟的时间，略微等待即可。"
+},
+{
+	"uri": "/003_emr/033_process/0332_crawler_rds/",
+	"title": "3.2 爬取 RDS 元数据",
+	"tags": [],
+	"description": "",
+	"content": " 创建名为 my-lab2-crawler-rds 的爬网程序，如下图所示： 点击“添加爬网程序”后： 配置对应参数（包含路径那里输入：bdd/%）： 选择对应的 role： 配置输出（点击添加数据库，名字为 default 即可）： 完成后，运行爬网程序，爬取成功后，元数据目录中会出现 4 张 RDS 元数据表，如下图所示：  "
+},
+{
+	"uri": "/003_emr/033_process/0333_crawler_kinesis/",
+	"title": "3.3 爬取 Kinesis 元数据",
+	"tags": [],
+	"description": "",
+	"content": " 如果 Lab1 成功完成，推荐使用 Lab1 输出到 S3 的数据，可以跳过这个步骤。\n如果 Lab1 未完成或者希望使用我们提前准备了的 5 年（2015-2020）的 Kinesis 流历史数据，请安顺序操作。\n  登录 Lab0 部署的 Linux 客户端（*这个 Linux 客户端必须配置了 AKSK，具体参考 Lab0 的内容*）：\ncd ~ mkdir s3his cd s3his wget http://122.248.225.198/lab2/kinesis/2015-2020.tar.gz --http-user=bdd --http-passwd=bdd@2020 tar zxvf 2015-2020.tar.gz aws s3 mb s3://lab2-748313030715-sin-com aws s3 sync ./2020 s3://lab2-748313030715-sin-com/2020  然后进入 S3 控制台查看对应数据： 爬取 Kinesis 元数据\n  创建名为 my-lab2-crawler-kinesis 的爬网程序，如下图所示：添加数据存储（选择 Lab1 的输出目的地或者上一个步骤准备的 S3 桶）：选择 IAM 角色：配置输出： 完成后，运行爬网程序，元数据目录中会出现 1 张 Kinesis 元数据表，如下图所示："
+},
+{
+	"uri": "/003_emr/033_process/0334_load_rds_kinesis_data/",
+	"title": "3.4 加载 RDS 和 Kinesis 的数据源到目标",
+	"tags": [],
+	"description": "",
+	"content": "本步骤，利用 Glue ETL 功能，加载 RDS 和 Kinesis 的两个数据源至 s3://lab2748313030715-sin-com/spark/input/`，对应的文件夹中，ETL 作业可通过可视化向导方式生成代码。\n为节省时间，已为学员准备好 ETL 脚本，存放在 http://122.248.225.198/lab2/glue/code/lab2_load_rds_and_kinesis_to_s3_for_spark_input\n下载此脚本，并上传到对应 S3 目录下（手工创建桶和目录，并上传，过程略）：s3://lab2-748313030715-sincom/glue/code/lab2_load_rds_and_kinesis_to_s3_for_spark_input\n 创建 ETL 作业如下图所示： 配置作业属性： 保存并编辑作业：  保存作业后（这一步记得修改表名和桶名），运行作业，执行完成作业大约需要几分钟，如下图所示： 运行中： 作业运行完成后，可检查 s3://lab2-748313030715-sin-com/spark/input/ 目录下的 tbl_customer、tbl_product、tbl_address、tbl_transaction 文件夹中，是否产生对应的 parquet 格式的数据，以验证 ETL 作业是否执行成功。   "
+},
+{
+	"uri": "/003_emr/033_process/0335_crawler_s3/",
+	"title": "3.5 爬取 S3 元数据",
+	"tags": [],
+	"description": "",
+	"content": " 创建名为 my-lab2-crawler-s3 的爬网程序，如下图所示： 配置数据存储 配置 IAM 角色 配置输出 审核并确认完成。然后运行爬网程序，元数据目录中会出现 4 张 input 文件夹 中数据的元数据表，如下图所示：  "
+},
+{
+	"uri": "/003_emr/033_process/0336_start_emr_spark/",
+	"title": "3.6 启动 EMR 集群，执行 Spark",
+	"tags": [],
+	"description": "",
+	"content": "创建集群参考：lab0-3-部署 RDS 和 EMR 集群-实验手册-20200825-v0.1.pdf\n当集群创建好，可通过 ssh 方式登录集群，如下图所示，依据学员的操作系 统，选择登录方式：默认 EMR 的 Master 外网不通，找到安全组名称为 ElasticMapReduce-master 的条目，添加 ssh 远程可访问，然后就可以登录了。 登录后如下所示：本实验将采用两种方式进行批处理作业。第一种通过 spark-shell 交互式命 令进行批处理，第二种（可选）通过 spark-submit 提交 java 应用程序进行批处理，两种处理逻辑和输出结果一样。第二种，代码存放在 http://122.248.225.198/lab2/spark/code/original-emr-0.0.1-SNAPSHOT.jar，各位学员可以把代码取下来，放到例如：s3://my-lab2-139846303839-sincom/spark/code/original-emr-0.0.1-SNAPSHOT.jar\n 用 spark-shell 提交  登录 emr 集群，输入 spark-shell 命令，并启动 spark-shell 环境。\n1). 生成聚合数据集，如下代码和示例图所示（注意表的名称）：\nval result = spark.sql(\u0026quot;SELECT tt.tno tno, tt.tdate tdate, tt.uno uno, tt.pno pno, tt.tnum tnum, tc.uname uname, tc.umobile umobile, ta.ano ano, ta.acity acity, ta.aname aname, tp.pclass pclass, tp.pname pname, tp.pprice price FROM s3_tbl_transaction tt, s3_tbl_customer tc, s3_tbl_address ta, s3_tbl_product tp WHERE tp.pno = tt.pno and tt.uno = tc.uno and tc.ano = ta.ano ORDER BY tt.tuptime desc\u0026quot;);  2). 查询 result 的 schema，检查是否生产所需结构；\nresult.printSchema();  3). 输出数据集结果至 S3（result 文件夹）\nresult.write.format(\u0026quot;parquet\u0026quot;).mode(\u0026quot;append\u0026quot;).save(\u0026quot;s3://lab2-748313030715sin-com/spark/output\u0026quot;);  4). 去对应 S3 目录（s3://lab2-748313030715-sin-com/spark/output）查看是否正 常输出结果（这些结果会在 Lab3 里面用到）。 用 spark-submit提交（可选）  本实验，以 java 代码为例，退出 spark-shell 环境，执行以下命令进行部署 （部署方式有多种，此处为 yarn 客户端模式）\nspark-submit --master yarn --deploy-mode client --class com.demo.emr.spark.Lab2 s3://lab2-748313030715-sin-com/spark/code/original-emr-0.0.1-SNAPSHOT.jar s3://lab2-748313030715-sin-com/spark/output  恭喜你，你已经完成 Lab2 的实验内容。\n"
+},
+{
+	"uri": "/003_emr/034_tips/",
+	"title": "4. 注意事项",
+	"tags": [],
+	"description": "",
+	"content": "在实验架构场景中，本实验（Lab2）和后面的实验（Lab3/4）是先后顺序 关系，但是为了方便大家更好的理解实验组件和流程，我们单独设计了每个实验的数据源，所以 Lab2 的实验结果数据不用保存，不影响后面的实验。\n文档修改过版本，所以里面截图的账号 ID 可能不完全一样，大家忽略即可。\n"
 },
 {
 	"uri": "/010_architecture/",
@@ -28,11 +98,60 @@
 	"content": "在这个动手训练营中，您将会学习到如何使用 AWS 的服务来构建一个车辆IOT模拟器。\n本训练营包括三个子实验:\n Lab1 - 将车辆接入AWS IOT Lab2 - AWS IoT 影子控制 Lab3 - 通过Web与AWS IoT交互  "
 },
 {
-	"uri": "/001_create_cloud9/",
-	"title": "创建 Cloud9 Lab环境",
+	"uri": "/001_lab0/011_lab0-3/0111_object/",
+	"title": "0.3.1 实验目标",
 	"tags": [],
 	"description": "",
-	"content": " 实验将在北京Region（cn-north-1）进行，我们运用创建一个EC2 的Cloud9 实例来统一编程环境。\n  登录EC2控制台, 输入现场工作人员提供的用户名与密码\n本实验的用户名为：demouser-xx, 为了方便大家进行区分，可以以手头树莓派的编号替代前述的xx\n密码为现场工作人员提供的密码\n启动EC2 ，新建实例：  点击Marketplace，搜索Cloud9，点击选择  选择实例类型，此处选择t3a.small:  选择下一步，配置实例详细信息，然后连续点击两次下一步。来到步骤5: 添加标签，添加标签 Name: 你的名字，用户和其他用户区分开。  选择下一步，来到步骤6: 配置安全组，选择 选择一个现有的安全组，然后选择ID为sg-024db36b892d8b71e的安全组。  点击审核和启动，在弹出的密钥对选择界面，选择在没有密钥对的情况下继续，然后勾选我确认，然后启动实例。  然后点击启动实例，成功后，由于是共用账号，所以有现场会看到较多其他用户生成的实例，请在上方搜索栏根据Name找到您启动的实例(请不要和现场的其他用户弄混)  选中您创建的实例，我们为其赋予实验相关的IAM权限\n点击上方的操作，然后选择实例设置，Attach/Replace IAM Role\n选择ec2-s3-iot-access，并点击Apply\n 登录基于EC2搭建的Cloud9 编程环境\n在浏览器中输入 公有IP:8181 （请关闭所有代理）\n输入用户名： aws，\n密码： 实例ID（如下图所示），进入Cloud9界面.\n 从github 下载代码 在terminal中输入：\ngit clone https://github.com/Kervin-AWS/auto-iot-lab.git    "
+	"content": "部署 RDS 数据库（MySQL）并远程连接和导入 MySQL 数据；\n部署 EMR 集群（Spark ，此处不做配置，仅部署）。\n"
+},
+{
+	"uri": "/001_lab0/011_lab0-3/0112_prepare/",
+	"title": "0.3.2 环境准备",
+	"tags": [],
+	"description": "",
+	"content": "本实验的环境包括如下信息：\n 区域选择 AWS 新加坡区域（ap-southeast-1）； 网络使用默认的 vpc； 部署测试一个 RDS，并导入提前准备好的数据； 部署一个 EMR 集群；  "
+},
+{
+	"uri": "/001_lab0/011_lab0-3/0113_process/",
+	"title": "0.3.3 实验过程",
+	"tags": [],
+	"description": "",
+	"content": "登录并打开 EMR 控制台： 选择创建集群：点击转到高级选项：\n选择 Spark 和元数据配置\n硬件配置使用默认值： 输入集群名字 选择前面步骤创建的 key\n大概需要几分钟，等 EMR 集群状态变成如下图所示即可。\n请确保数据量一致。\n"
+},
+{
+	"uri": "/001_lab0/011_lab0-3/0113_process/01131_rds/",
+	"title": "0.3.3.1 部署RDS数据库",
+	"tags": [],
+	"description": "",
+	"content": " 准备参数组 打开 RDS 控制台：选择左边菜单栏的参数组：点击创建参数组，选择系统默认已有的对应版本，输入名字和描述，点击创建：打开刚才创建的参数组：输入“character_set”过滤参数并点击编辑参数：把所有能改的编码全部改成“utf8mb4”后，保存：  准备选项组 打开 RDS 控制台，选择左边菜单栏的选项组：点击创建选项组，输入对应名字，描述，选择对应版本，点击创建： 部署 RDS 数据库 登录 AWS 控制台，选择 RDS，进入数据库页面，选择创建数据库：选择标准创建和 MySQL 引擎：选择对应版本，模板，以及数据库实例标识：创建对应用户名，密码（此处设置为 QazWsx2020），选择对应类型：存储空间设置（支持弹性伸缩，此处选择默认值用来做测试）：因为是开发测试，所以此处选择不创建备用实例：选择默认的 VPC 和网络配置：选择密码身份验证：配置初始数据库，选择对应数据库参数组和选项组（其他全部默认）：然后，选择“创建数据库”即可。\n 导入 RDS 数据库\n  RDS 数据库可用以后，会产生一个终端节点，如下图所所示：点开安全组，修改入站规则：在之前部署的 Linux 上安装 MySQL 客户端：通过如下命令下载数据文件\nmkdir ~/sql cd ~/sql wget http://122.248.225.198/lab2/rds/tbl_address.sql --http-user=bdd --http-passwd=bdd@2020 wget http://122.248.225.198/lab2/rds/tbl_customer.sql --http-user=bdd --http-passwd=bdd@2020 wget http://122.248.225.198/lab2/rds/tbl_product.sql --http-user=bdd --http-passwd=bdd@2020 wget http://122.248.225.198/lab2/rds/tbl_transaction.sql --http-user=bdd --http-passwd=bdd@2020  远程连接：\nmysql -h bdd.cj6hmgaefgej.ap-southeast-1.rds.amazonaws.com -u admin -p bdd  用如下方式导入上述五个 sql 脚本文件：\nsource ~/sql/tbl_address.sql source ~/sql/tbl_customer.sql source ~/sql/tbl_product.sql source ~/sql/tbl_transaction.sql  导入完毕后我们看到数据库表的数据如下：请确保数据量一致。\n"
+},
+{
+	"uri": "/001_lab0/011_lab0-3/0113_process/01132_emr/",
+	"title": "0.3.3.2 部署EMR集群",
+	"tags": [],
+	"description": "",
+	"content": " 登录并打开 EMR 控制台:  选择创建集群:  点击转到高级选项:  选择 Spark 和元数据配置:  硬件配置使用默认值:  输入集群名字:  选择前面步骤创建的 key :  大概需要几分钟，等 EMR 集群状态变成如下图所示即可。请确保数据量一致。  "
+},
+{
+	"uri": "/001_lab0/011_lab0-3/0114_tips/",
+	"title": "0.3.4 注意事项",
+	"tags": [],
+	"description": "",
+	"content": " 部署 RDS 数据库时，建议单独创建参数组和选项组（即使一个字都不改）， 不推荐使用默认值； 部署 RDS 数据库时，不建议直接部署到公网； 配置访问安全组时，建议按需开放，本实验里面的安全组嵌套方式不是最佳 实践，仅用于实验时方便大家使用演示用途；  "
+},
+{
+	"uri": "/001_lab0/",
+	"title": "Lab0 环境和数据准备",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "/001_lab0/011_lab0-3/",
+	"title": "lab0-3 部署RDS和EMR集群",
+	"tags": [],
+	"description": "",
+	"content": "在本练习中，您将学习如何部署 RDS 数据库和 EMR 集群。 我们将分别从以下步骤进行实验：  0.3.1 实验目标   0.3.2 环境准备   0.3.3 实验过程   0.3.4 注意事项   "
 },
 {
 	"uri": "/002_connect-car-to-iot/",
@@ -42,11 +161,11 @@
 	"content": " 部署说明 Lab1将会在cloud9中模拟一台行驶的汽车设备，将行驶中的一些状态信息上传到AWS IoT,如下图所示\n我们将分别从以下步骤进行实验：\n 1. 创建 IOT Core   2. 配置虚拟车辆   "
 },
 {
-	"uri": "/003_shadow/",
-	"title": "Lab2 AWS IoT的设备影子",
+	"uri": "/003_emr/",
+	"title": "Lab2 EMR 批量数据处理",
 	"tags": [],
 	"description": "",
-	"content": "利用IoT shadow，可以在云端创建一个真实设备的影子，用于在设备断网时记录状态信息，联网后影子将和设备进行状态同步\n 我们在IoT core中找到car-xx，查看shadow状态\n 打开Lab2的代码exercise-lab2.js，可以看到代码定义了车灯开和车灯关两个状态 修改exercise-lab2.js 的21行的物品名称， 在当前目录执行代码，可以看到当前状态为车灯关闭 在云端查看car1点影子状态，可以看到已经实时同步为lights:false，即车灯关闭 我们在云端对car1的影子发布指令，把车灯打开。 在IoT core中选择Test-Publish to a topic，输入$aws/things/car-xx/shadow/update，将xx替换为你的编号，在方框中写入执行代码，\n{ \u0026quot;state\u0026quot;: { \u0026quot;desired\u0026quot;: { \u0026quot;lights\u0026quot;: true } } }  然后Publish  在Cloud9客户端可以看到car1 reporting了一个新的状态，车灯状态从off 变成了on，云端指令下发成功 在云端查看之前订阅的$aws/things/car1/shadow/update/documents，可以看到影子状态从false变成true\n 在云端多次改变shadow状态，在cloud9设备端查看car1车灯状态   "
+	"content": "在本练习中，您将学习如何使用 Amazon EMR（Spark）和 AWS Glue （ETL）构建批量数据分析处理程序。\n我们将分别从以下步骤进行实验：\n 1. 实验目标   2. 环境准备   3. 实验过程   4. 注意事项   "
 },
 {
 	"uri": "/004_webcontrol/",

@@ -12,7 +12,57 @@
   </url>
   
   <url>
+    <loc>/003_emr/031_object/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/003_emr/032_prepare/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/002_connect-car-to-iot/022_edit_code/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/003_emr/033_process/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/003_emr/033_process/0331_create_rds/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/003_emr/033_process/0332_crawler_rds/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/003_emr/033_process/0333_crawler_kinesis/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/003_emr/033_process/0334_load_rds_kinesis_data/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/003_emr/033_process/0335_crawler_s3/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/003_emr/033_process/0336_start_emr_spark/</loc>
+    <lastmod>2018-10-03T10:17:52-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/003_emr/034_tips/</loc>
     <lastmod>2018-10-03T10:17:52-07:00</lastmod>
   </url>
   
@@ -22,7 +72,35 @@
   </url>
   
   <url>
-    <loc>/001_create_cloud9/</loc>
+    <loc>/001_lab0/011_lab0-3/0111_object/</loc>
+  </url>
+  
+  <url>
+    <loc>/001_lab0/011_lab0-3/0112_prepare/</loc>
+  </url>
+  
+  <url>
+    <loc>/001_lab0/011_lab0-3/0113_process/</loc>
+  </url>
+  
+  <url>
+    <loc>/001_lab0/011_lab0-3/0113_process/01131_rds/</loc>
+  </url>
+  
+  <url>
+    <loc>/001_lab0/011_lab0-3/0113_process/01132_emr/</loc>
+  </url>
+  
+  <url>
+    <loc>/001_lab0/011_lab0-3/0114_tips/</loc>
+  </url>
+  
+  <url>
+    <loc>/001_lab0/</loc>
+  </url>
+  
+  <url>
+    <loc>/001_lab0/011_lab0-3/</loc>
   </url>
   
   <url>
@@ -30,7 +108,7 @@
   </url>
   
   <url>
-    <loc>/003_shadow/</loc>
+    <loc>/003_emr/</loc>
   </url>
   
   <url>
